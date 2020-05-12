@@ -30,10 +30,8 @@ const item3 = new Item({
   name: "<-- Hit this to delete an item"
 });
 
+//An array of the default items in the todolist
 const defaultItems = [item1, item2, item3];
-
-
-
 
 app.get("/", function(req, res) {
   //Finding all the documents in the items collection
@@ -53,6 +51,8 @@ app.get("/", function(req, res) {
   });
 });
 
+
+//Create a post request
 app.post("/", function(req, res){
   const itemName = req.body.newItem;
 
@@ -64,9 +64,21 @@ app.post("/", function(req, res){
   res.redirect("/");
 });
 
-app.get("/work", function(req,res){
-  res.render("list", {listTitle: "Work List", newListItems: workItems});
+
+//A post request to delete route
+
+app.post("/delete", function (req, res) {
+  const checkedItem = req.body.checkbox;
+  Item.findByIdAndRemove(checkedItem, function (err) {
+    if (!err) {
+      console.log("Successfully removed an item from todolistDB!");
+      res.redirect("/");
+    }
+  });
+
 });
+
+
 
 app.get("/about", function(req, res){
   res.render("about");
